@@ -22,5 +22,15 @@ export const resolvers = {
         throw new Error("Failed to fetch users");
       }
     },
+    getUser: async (parent, args, contextValue, info) => {
+      try {
+        const result = await axios.get(
+          `https://jsonplaceholder.typicode.com/users/${args.id}`
+        );
+        return result.data;
+      } catch (error) {
+        throw new Error("Failed to fetch users");
+      }
+    },
   },
 };

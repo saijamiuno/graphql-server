@@ -18,5 +18,6 @@ type User {
 type Query{
     getTodos: [Todo]
     getAllUsers: [User]
+    getUser(id: ID!): User
 }
 `;
