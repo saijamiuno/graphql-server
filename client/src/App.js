@@ -4,11 +4,13 @@ import { gql, useQuery } from "@apollo/client";
 const query = gql`
   query fetchTodos {
     getTodos {
-      id
       title
+      id
       completed
       user {
+        email
         name
+        website
       }
     }
   }
@@ -20,11 +22,21 @@ function App() {
   return (
     <div className="App">
       <table>
+        <thead>
+          <tr>
+            <th>Todo Title</th>
+            <th>User Name</th>
+            <th>User Email</th>
+            <th>User Website</th>
+          </tr>
+        </thead>
         <tbody>
-          {data.getTodos?.map((e) => (
-            <tr key={e.id}>
-              <td>{e.title}</td>
-              <td>{e?.user?.name}</td>
+          {data.getTodos?.map((todo) => (
+            <tr key={todo.id}>
+              <td>{todo.title}</td>
+              <td>{todo?.user?.name}</td>
+              <td>{todo?.user?.email}</td>
+              <td>{todo?.user?.website}</td>
             </tr>
           ))}
         </tbody>
