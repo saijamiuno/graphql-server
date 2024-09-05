@@ -44,5 +44,9 @@ export const resolvers = {
         throw new Error("Failed to fetch users");
       }
     },
+    getContext: (parent, args, contextValue, info) => {
+      console.log(contextValue, "contextValue");
+      return "OK"
+    },
   },
 };
