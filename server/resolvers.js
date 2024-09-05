@@ -45,8 +45,7 @@ export const resolvers = {
       }
     },
     getContext: (parent, args, contextValue, info) => {
-      console.log(contextValue, "contextValue");
-      return "OK"
+      return "OK";
     },
   },
 };

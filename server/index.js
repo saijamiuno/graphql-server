@@ -25,10 +25,8 @@ async function startServer(params) {
     "/graphql",
     expressMiddleware(await server, {
       context: async ({ req, res }) => {
-        return {
-          
-          myName: "SJ",
-        };
+        const token = req.headers["authorization"];
+        console.log(token, "token");
       },
     })
   );
