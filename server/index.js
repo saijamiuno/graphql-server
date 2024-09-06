@@ -30,7 +30,7 @@ async function startServer(params) {
       },
     })
   );
-  app.listen(8000, () => console.log("Serevr Started at PORT 8000"));
+  app.listen(7000, () => console.log("Serevr Started at PORT 7000"));
 }
 
 startServer();

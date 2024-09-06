@@ -1,4 +1,21 @@
 import axios from "axios";
+import dotenv from "dotenv";
+import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
+
+const uri = process.env.MONGO_URL;
+
+dotenv.config();
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
+
+const dataBase = client.db(process.env.DATABASE_DEV);
+const collection = dataBase.collection("products");
+const usersCollection = dataBase.collection("testUsers");
 
 export const resolvers = {
   Todo: {
@@ -26,10 +43,8 @@ export const resolvers = {
     },
     getAllUsers: async () => {
       try {
-        const result = await axios.get(
-          "https://jsonplaceholder.typicode.com/users"
-        );
-        return result.data;
+        const result = await usersCollection.find().toArray();
+        return result;
       } catch (error) {
         throw new Error("Failed to fetch users");
       }
