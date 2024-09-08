@@ -156,5 +156,55 @@ export const resolvers = {
         };
       }
     },
+    signUp: async (parent, { userId, password, firstName, lastName }) => {
+      try {
+        if (!userId || !password || !firstName || !lastName) {
+          throw new GraphQLError("Invalid data. Please provide valid data.", {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            },
+          });
+        }
+
+        // Check if the user already exists
+        const existingUser = await usersCollection.findOne({ userId });
+        if (existingUser) {
+          throw new GraphQLError(
+            "Username already exists. Choose another one.",
+            {
+              extensions: {
+                code: "CONFLICT",
+              },
+            }
+          );
+        }
+
+        const hashedPassword = bcrypt.hashSync(password, 10);
+
+        const result = await usersCollection.insertOne({
+          userId,
+          firstName,
+          lastName,
+          password: hashedPassword,
+        });
+
+        console.log(`Saved user with ID: ${result.insertedId}`);
+
+        // Optionally, create a JWT for the user upon signup
+        // const token = jwt.sign({ userId }, secretKey, { expiresIn: "1h" });
+
+        return {
+          message: "User registered successfully",
+          // token,
+        };
+      } catch (error) {
+        console.error("Error", error);
+        throw new GraphQLError(`Internal Server Error: ${error.message}`, {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
+      }
+    },
   },
 };

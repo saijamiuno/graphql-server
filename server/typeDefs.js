@@ -56,6 +56,7 @@ type AuthPayload {
 
 type Mutation {
   signIn(userId: String!, password: String!): AuthPayload
+  signUp(userId: String!, password: String!, firstName: String!, lastName: String!): AuthPayload
 }
 
 `;
