@@ -30,4 +30,14 @@ type Query {
     getContext: String!
     getUsers: [LoginUser]!
 }
+
+type AuthPayload {
+  token: String!
+  message: String!
+}
+
+type Mutation {
+  signIn(userId: String!, password: String!): AuthPayload
+}
+
 `;

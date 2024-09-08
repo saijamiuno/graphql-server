@@ -1,8 +1,11 @@
 import axios from "axios";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 dotenv.config();
 const uri = process.env.MONGO_URL;
+const secretKey = process.env.SECRET_KEY;
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -67,6 +70,35 @@ export const resolvers = {
         return result;
       } catch (error) {
         throw new Error("Failed to fetch db users");
+      }
+    },
+  },
+  Mutation: {
+    signIn: async (parent, { userId, password }, context, info) => {
+      try {
+        const users = await usersCollection.find().toArray();
+        const isUser = users.find((e) => e.userId === userId);
+        if (isUser && bcrypt.compareSync(password, isUser.password)) {
+          // Generate a JWT token
+          const token = jwt.sign(
+            {
+              userId,
+              password,
+            },
+            secretKey,
+            { expiresIn: "1h" }
+          );
+          return {
+            message: "success",
+            token: token,
+          };
+        } else {
+          console.log("Invalid username or password.");
+          return { message: "Invalid username or password." };
+        }
+      } catch (error) {
+        console.error("Error", error);
+        throw new Error(`Internal Server Error: ${error.message}`);
       }
     },
   },
