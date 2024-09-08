@@ -15,6 +15,7 @@ const client = new MongoClient(uri, {
 });
 const dataBase = client.db(process.env.DATABASE_DEV);
 const usersCollection = dataBase.collection("testUsers");
+const collection = dataBase.collection("products");
 
 export const resolvers = {
   Todo: {
@@ -70,6 +71,14 @@ export const resolvers = {
         return result;
       } catch (error) {
         throw new Error("Failed to fetch db users");
+      }
+    },
+    getProducts: async (parent, args, context, info) => {
+      try {
+        const result = await collection.find().toArray();
+        return result.splice(0, 200);
+      } catch (error) {
+        console.log(`ERROR : ${error}`);
       }
     },
   },
