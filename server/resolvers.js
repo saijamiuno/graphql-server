@@ -3,6 +3,7 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { GraphQLError } from "graphql";
 dotenv.config();
 const uri = process.env.MONGO_URL;
 const secretKey = process.env.SECRET_KEY;
@@ -16,6 +17,41 @@ const client = new MongoClient(uri, {
 const dataBase = client.db(process.env.DATABASE_DEV);
 const usersCollection = dataBase.collection("testUsers");
 const collection = dataBase.collection("products");
+
+const verifyTokenMiddleware = (context) => {
+  // Extract the authorization token from the headers
+  const token = context.req.headers["authorization"];
+
+  // Check if the token is provided
+  if (!token) {
+    throw new GraphQLError("Authorization token is missing.", {
+      extensions: {
+        code: "FORBIDDEN",
+        http: {
+          status: 403,
+        },
+      },
+    });
+  }
+
+  try {
+    // Verify the JWT token
+    const decoded = jwt.verify(token, secretKey);
+
+    // Attach the decoded user information to the context
+    context.user = decoded;
+  } catch (err) {
+    // Handle token verification errors
+    throw new GraphQLError("Invalid or expired token.", {
+      extensions: {
+        code: "UNAUTHENTICATED",
+        http: {
+          status: 401,
+        },
+      },
+    });
+  }
+};
 
 export const resolvers = {
   Todo: {
@@ -75,10 +111,12 @@ export const resolvers = {
     },
     getProducts: async (parent, args, context, info) => {
       try {
+        verifyTokenMiddleware(context);
         const result = await collection.find().toArray();
         return result.splice(0, 200);
       } catch (error) {
         console.log(`ERROR : ${error}`);
+        throw new Error("Failed to fetch products.");
       }
     },
   },
