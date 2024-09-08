@@ -3,8 +3,10 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 import { GraphQLError } from "graphql";
 dotenv.config();
+// DB config
 const uri = process.env.MONGO_URL;
 const secretKey = process.env.SECRET_KEY;
 const client = new MongoClient(uri, {
@@ -18,6 +20,14 @@ const dataBase = client.db(process.env.DATABASE_DEV);
 const usersCollection = dataBase.collection("testUsers");
 const collection = dataBase.collection("products");
 
+mongoose
+  .connect(`${uri}/todo`)
+  .then(() => console.log("Connected!"))
+  .catch((err) => {
+    console.log("Mongo Error", err);
+  });
+
+// Middleware
 const verifyTokenMiddleware = (context) => {
   // Extract the authorization token from the headers
   const token = context.req.headers["authorization"];
@@ -52,6 +62,14 @@ const verifyTokenMiddleware = (context) => {
     });
   }
 };
+
+const todoSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  completed: { type: Boolean, default: false },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+});
+
+const Todo = mongoose.model("Todo", todoSchema);
 
 export const resolvers = {
   Todo: {
