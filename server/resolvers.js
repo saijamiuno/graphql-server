@@ -76,14 +76,18 @@ export const resolvers = {
   Mutation: {
     signIn: async (parent, { userId, password }, context, info) => {
       try {
+        // Fetch all users from the database
         const users = await usersCollection.find().toArray();
-        const isUser = users.find((e) => e.userId === userId);
-        if (isUser && bcrypt.compareSync(password, isUser.password)) {
-          // Generate a JWT token
+        // Find the user by userId
+        const existingUser = users.find((user) => user.userId === userId);
+        // If user is found and password matches
+        if (
+          existingUser &&
+          bcrypt.compareSync(password, existingUser.password)
+        ) {
           const token = jwt.sign(
             {
-              userId,
-              password,
+              userId: existingUser.userId,
             },
             secretKey,
             { expiresIn: "1h" }
@@ -93,12 +97,16 @@ export const resolvers = {
             token: token,
           };
         } else {
-          console.log("Invalid username or password.");
-          return { message: "Invalid username or password." };
+          return {
+            message: "Invalid username or password.",
+            token: null,
+          };
         }
       } catch (error) {
-        console.error("Error", error);
-        throw new Error(`Internal Server Error: ${error.message}`);
+        return {
+          message: error,
+          token: null,
+        };
       }
     },
   },

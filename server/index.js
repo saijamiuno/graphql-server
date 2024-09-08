@@ -26,7 +26,6 @@ async function startServer(params) {
     expressMiddleware(await server, {
       context: async ({ req, res }) => {
         const token = req.headers["authorization"];
-        console.log(token, "token");
       },
     })
   );
