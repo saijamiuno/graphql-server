@@ -3,8 +3,6 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import bodyParser from "body-parser";
 import cors from "cors";
-import jwt from "jsonwebtoken";
-import axios from "axios";
 
 import { typeDefs } from "./typeDefs.js";
 import { resolvers } from "./resolvers.js";
@@ -25,7 +23,7 @@ async function startServer(params) {
     "/",
     expressMiddleware(await server, {
       context: async ({ req, res }) => {
-        const token = req.headers["authorization"];
+        return { req };
       },
     })
   );
