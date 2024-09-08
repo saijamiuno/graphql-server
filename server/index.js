@@ -22,7 +22,7 @@ async function startServer(params) {
   await server.start();
 
   app.use(
-    "/graphql",
+    "/",
     expressMiddleware(await server, {
       context: async ({ req, res }) => {
         const token = req.headers["authorization"];
@@ -30,7 +30,11 @@ async function startServer(params) {
       },
     })
   );
-  app.listen(8000, () => console.log("Serevr Started at PORT 8000"));
+  const PORT = process.env.PORT;
+  app.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
+    console.log(`http://localhost:${PORT}`);
+  });
 }
 
 startServer();

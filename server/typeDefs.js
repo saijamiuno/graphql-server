@@ -9,6 +9,13 @@ type User {
     website: String!
 }
 
+type LoginUser {
+    _id: ID!    
+    userId: String!
+    firstName: String!
+    lastName: String!
+}
+
 type Todo {
     id: ID!    
     title: String!
@@ -21,5 +28,6 @@ type Query {
     getAllUsers: [User!]!
     getUser(id: ID!): User
     getContext: String!
+    getUsers: [LoginUser]!
 }
 `;
