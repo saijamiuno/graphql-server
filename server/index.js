@@ -3,8 +3,6 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import bodyParser from "body-parser";
 import cors from "cors";
-import jwt from "jsonwebtoken";
-import axios from "axios";
 
 import { typeDefs } from "./typeDefs.js";
 import { resolvers } from "./resolvers.js";
@@ -22,15 +20,18 @@ async function startServer(params) {
   await server.start();
 
   app.use(
-    "/graphql",
+    "/",
     expressMiddleware(await server, {
       context: async ({ req, res }) => {
-        const token = req.headers["authorization"];
-        console.log(token, "token");
+        return { req };
       },
     })
   );
-  app.listen(7000, () => console.log("Serevr Started at PORT 7000"));
+  const PORT = process.env.PORT;
+  app.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
+    console.log(`http://localhost:${PORT}`);
+  });
 }
 
 startServer();
