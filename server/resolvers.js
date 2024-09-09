@@ -1,12 +1,4 @@
 import axios from "axios";
-<<<<<<< HEAD
-import dotenv from "dotenv";
-import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
-
-const uri = process.env.MONGO_URL;
-
-dotenv.config();
-=======
 import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
@@ -17,7 +9,6 @@ dotenv.config();
 // DB config
 const uri = process.env.MONGO_URL;
 const secretKey = process.env.SECRET_KEY;
->>>>>>> 97a95d1eb29e2c6cbee9f8337f1dded0f10e5f9d
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -25,12 +16,6 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
-<<<<<<< HEAD
-
-const dataBase = client.db(process.env.DATABASE_DEV);
-const collection = dataBase.collection("products");
-const usersCollection = dataBase.collection("testUsers");
-=======
 const dataBase = client.db(process.env.DATABASE_DEV);
 const usersCollection = dataBase.collection("testUsers");
 const collection = dataBase.collection("products");
@@ -85,7 +70,6 @@ const todoSchema = new mongoose.Schema({
 });
 
 const Todo = mongoose.model("Todo", todoSchema);
->>>>>>> 97a95d1eb29e2c6cbee9f8337f1dded0f10e5f9d
 
 export const resolvers = {
   Todo: {

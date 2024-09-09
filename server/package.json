@@ -21,11 +21,7 @@
     "express": "^4.19.2",
     "graphql": "^16.9.0",
     "jsonwebtoken": "^9.0.2",
-<<<<<<< HEAD
-    "mongodb": "^6.8.0",
-=======
     "mongoose": "^8.6.1",
->>>>>>> 97a95d1eb29e2c6cbee9f8337f1dded0f10e5f9d
     "nodemon": "^3.1.4"
   }
 }
