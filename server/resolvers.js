@@ -184,5 +184,13 @@ export const resolvers = {
       const todo = new Todo(input);
       return await todo.save();
     },
+    updateTodo: async (parent, { id, input, completed }) => {
+      const todo = await Todo.findById(id);
+      if (!todo) throw new Error("Todo not found");
+      todo.title = input.title || todo.title;
+      todo.description = input.description || todo.description;
+      todo.completed = completed !== undefined ? completed : todo.completed;
+      return await todo.save();
+    },
   },
 };
