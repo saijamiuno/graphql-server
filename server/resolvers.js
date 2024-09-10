@@ -87,6 +87,9 @@ export const resolvers = {
         throw new Error("Failed to fetch products.");
       }
     },
+    getTodos: async () => {
+      return await Todo.find();
+    },
   },
   Mutation: {
     signIn: async (parent, { userId, password }, context, info) => {
@@ -174,7 +177,7 @@ export const resolvers = {
         });
       }
     },
-    createTodo: async ({ input }) => {
+    createTodo: async (parent, { input }) => {
       const todo = new Todo(input);
       return await todo.save();
     },

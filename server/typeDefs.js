@@ -41,6 +41,7 @@ type Todo {
 type Query {
     getUsers: [User]!
     getProducts: [Product]!
+    getTodos: [Todo]
 }
 
 type AuthPayload {
