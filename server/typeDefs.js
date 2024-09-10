@@ -42,6 +42,7 @@ type Query {
     getUsers: [User]!
     getProducts: [Product]!
     getTodos: [Todo]
+    getTodoById(id: ID!): Todo
 }
 
 type AuthPayload {
@@ -53,6 +54,7 @@ type Mutation {
   signIn(userId: String!, password: String!): AuthPayload
   signUp(userId: String!, password: String!, firstName: String!, lastName: String!): AuthPayload
   createTodo(input: TodoInput): Todo
+  
 }
 
 `;

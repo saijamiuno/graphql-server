@@ -90,6 +90,9 @@ export const resolvers = {
     getTodos: async () => {
       return await Todo.find();
     },
+    getTodoById: async (parent, { id }) => {
+      return await Todo.findById(id);
+    },
   },
   Mutation: {
     signIn: async (parent, { userId, password }, context, info) => {
