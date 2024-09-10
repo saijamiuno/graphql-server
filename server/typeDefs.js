@@ -1,13 +1,8 @@
 export const typeDefs = `#graphql
 
-type User {
-    _id: ID!    
-    userId: String!
-    firstName: String!
-    lastName: String!
-}
 
-type LoginUser {
+
+type User {
     _id: ID!    
     userId: String!
     firstName: String!
@@ -32,18 +27,19 @@ type Product {
 }
 
 type Todo {
-    id: ID!    
+    id: ID!
     title: String!
-    completed: Boolean
-    user: User!
-}
+    description: String
+    completed: Boolean!
+    createdAt: String!
+  }
+  input TodoInput {
+    title: String!
+    description: String
+  }
 
 type Query {
-    getTodos: [Todo!]!
-    getAllUsers: [User!]!
-    getUser(id: ID!): User
-    getContext: String!
-    getUsers: [LoginUser]!
+    getUsers: [User]!
     getProducts: [Product]!
 }
 
@@ -55,6 +51,7 @@ type AuthPayload {
 type Mutation {
   signIn(userId: String!, password: String!): AuthPayload
   signUp(userId: String!, password: String!, firstName: String!, lastName: String!): AuthPayload
+  createTodo(input: TodoInput): Todo
 }
 
 `;

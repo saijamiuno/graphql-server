@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { GraphQLError } from "graphql";
+import { Todo } from "./models/Todo.js";
 dotenv.config();
 // DB config
 const uri = process.env.MONGO_URL;
@@ -21,7 +22,9 @@ const usersCollection = dataBase.collection("testUsers");
 const collection = dataBase.collection("products");
 
 mongoose
-  .connect(`${uri}/todo`)
+  .connect(
+    `mongodb+srv://saijami:EcUpT3Et6dpojJz3@atlascluster.iotmmxp.mongodb.net/todo-app-1`
+  )
   .then(() => console.log("Connected!"))
   .catch((err) => {
     console.log("Mongo Error", err);
@@ -63,59 +66,8 @@ const verifyTokenMiddleware = (context) => {
   }
 };
 
-const todoSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  completed: { type: Boolean, default: false },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-});
-
-const Todo = mongoose.model("Todo", todoSchema);
-
 export const resolvers = {
-  Todo: {
-    user: async (parent, args, contextValue, info) => {
-      try {
-        const result = await axios.get(
-          `https://jsonplaceholder.typicode.com/users/${parent.userId}`
-        );
-        return result.data;
-      } catch (error) {
-        throw new Error("Failed to fetch todos");
-      }
-    },
-  },
   Query: {
-    getTodos: async () => {
-      try {
-        const result = await axios.get(
-          "https://jsonplaceholder.typicode.com/todos"
-        );
-        return result.data;
-      } catch (error) {
-        throw new Error("Failed to fetch todos");
-      }
-    },
-    getAllUsers: async () => {
-      try {
-        const result = await usersCollection.find().toArray();
-        return result;
-      } catch (error) {
-        throw new Error("Failed to fetch users");
-      }
-    },
-    getUser: async (parent, args, contextValue, info) => {
-      try {
-        const result = await axios.get(
-          `https://jsonplaceholder.typicode.com/users/${args.id}`
-        );
-        return result.data;
-      } catch (error) {
-        throw new Error("Failed to fetch users");
-      }
-    },
-    getContext: (parent, args, contextValue, info) => {
-      return "OK";
-    },
     // DB
     getUsers: async (parent, args, context, info) => {
       try {
@@ -221,6 +173,10 @@ export const resolvers = {
           },
         });
       }
+    },
+    createTodo: async ({ input }) => {
+      const todo = new Todo(input);
+      return await todo.save();
     },
   },
 };
