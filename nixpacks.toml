@@ -9,3 +9,6 @@
 
 [phases.start]
   server = "cd server && npm start"
+
+[start]
+  cmd = "cd server && npm start"
