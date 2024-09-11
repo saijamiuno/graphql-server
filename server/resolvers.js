@@ -87,11 +87,23 @@ export const resolvers = {
         throw new Error("Failed to fetch products.");
       }
     },
-    getTodos: async () => {
-      return await Todo.find();
+    getTodos: async (parent, args, context, info) => {
+      try {
+        verifyTokenMiddleware(context);
+        return await Todo.find();
+      } catch (error) {
+        console.log(`ERROR : ${error}`);
+        throw new Error("Failed to fetch Todos.");
+      }
     },
-    getTodoById: async (parent, { id }) => {
-      return await Todo.findById(id);
+    getTodoById: async (parent, { id }, context, info) => {
+      try {
+        verifyTokenMiddleware(context);
+        return await Todo.findById(id);
+      } catch (error) {
+        console.log(`ERROR : ${error}`);
+        throw new Error("Failed to get todo.");
+      }
     },
   },
   Mutation: {
