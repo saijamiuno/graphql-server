@@ -1,10 +1,11 @@
-# nixpacks.toml
-
 [phases]
-server-install = "cd server && npm install"
-server-build = "cd server && npm run build"
-client-install = "cd client && npm install"
-client-build = "cd client && npm run build"
+[phases.install]
+  server = "cd server && npm install"
+  client = "cd client && npm install"
 
-[build]
-cmd = "cd server && npm run start"
+[phases.build]
+  server = "cd server && npm run build"
+  client = "cd client && npm run build"
+
+[phases.start]
+  server = "cd server && npm start"
