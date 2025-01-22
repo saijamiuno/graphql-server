@@ -204,7 +204,7 @@ export const resolvers = {
       todo.completed = completed !== undefined ? completed : todo.completed;
       return await todo.save();
     },
-    deleteTodo: async ({ id }) => {
+    deleteTodo: async (parent, { id }) => {
       await Todo.findByIdAndDelete(id);
       return "Todo deleted";
     },
