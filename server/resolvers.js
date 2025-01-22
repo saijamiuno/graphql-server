@@ -19,7 +19,7 @@ const client = new MongoClient(uri, {
 });
 const dataBase = client.db(process.env.DATABASE_DEV);
 const usersCollection = dataBase.collection("testUsers");
-const collection = dataBase.collection("products");
+const productsCollection = dataBase.collection("products");
 
 mongoose
   .connect(
@@ -37,7 +37,7 @@ const verifyTokenMiddleware = (context) => {
 
   // Check if the token is provided
   if (!token) {
-    throw new GraphQLError("Authorization token is missing.", {
+    throw new GraphQLError("No token provided.", {
       extensions: {
         code: "FORBIDDEN",
         http: {
@@ -80,7 +80,7 @@ export const resolvers = {
     getProducts: async (parent, args, context, info) => {
       try {
         verifyTokenMiddleware(context);
-        const result = await collection.find().toArray();
+        const result = await productsCollection.find().toArray();
         return result.splice(0, 200);
       } catch (error) {
         console.log(`ERROR : ${error}`);
