@@ -180,7 +180,7 @@ export const resolvers = {
         // const token = jwt.sign({ userId }, secretKey, { expiresIn: "1h" });
 
         return {
-          message: "User registered successfully",
+          message: "success",
           // token,
         };
       } catch (error) {
@@ -191,6 +191,9 @@ export const resolvers = {
           },
         });
       }
+    },
+    createTask: async (parent, { title, description }) => {
+      console.log({ title, description });
     },
     createTodo: async (parent, { input }) => {
       const todo = new Todo(input);

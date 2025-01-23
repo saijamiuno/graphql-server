@@ -7,6 +7,23 @@ type User {
     userId: String!
     firstName: String!
     lastName: String!
+    email: String!
+    tasks: [Task!]!
+    notifications: [Notification!]!
+}
+
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  users: [User!]!
+}
+
+type Notification {
+  id: ID!
+  message: String!
+  createdAt: String!
+  user: User!
 }
 
 type Product {
@@ -43,16 +60,26 @@ type Query {
     getProducts: [Product]!
     getTodos: [Todo]
     getTodoById(id: ID!): Todo
+    getTasks: [Task!]!
+    task(id: ID!): Task
+    notifications: [Notification!]!
+    notification(id: ID!): Notification
 }
 
-type AuthPayload {
+type userSiginAuthResponse {
   token: String!
+  message: String!
+}
+type userSigUpAuthResponse {
   message: String!
 }
 
 type Mutation {
-  signIn(userId: String!, password: String!): AuthPayload
-  signUp(userId: String!, password: String!, firstName: String!, lastName: String!): AuthPayload
+  signIn(userId: String!, password: String!): userSiginAuthResponse
+  signUp(userId: String!, password: String!, firstName: String!, lastName: String!): userSigUpAuthResponse
+  createTask(title: String!, description: String): Task!
+  assignTaskToUser(userId: ID!, taskId: ID!): Task!
+  createNotification(userId: ID!, message: String!): Notification!
   createTodo(input: TodoInput): Todo
   updateTodo(id: ID!, input: TodoInput, completed: Boolean): Todo
   deleteTodo(id: ID!): String
