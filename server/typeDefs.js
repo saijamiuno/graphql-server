@@ -10,6 +10,7 @@ type User {
     email: String!
     tasks: [Task!]!
     notifications: [Notification!]!
+    createdAt:Float!
 }
 
 type Task {
@@ -76,7 +77,7 @@ type userSigUpAuthResponse {
 
 type Mutation {
   signIn(userId: String!, password: String!): userSiginAuthResponse
-  signUp(userId: String!, password: String!, firstName: String!, lastName: String!): userSigUpAuthResponse
+  signUp(userId: String!, password: String!, firstName: String!, lastName: String! ,email:String!): userSigUpAuthResponse
   createTask(title: String!, description: String): Task!
   assignTaskToUser(userId: ID!, taskId: ID!): Task!
   createNotification(userId: ID!, message: String!): Notification!

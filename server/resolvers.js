@@ -3,9 +3,11 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { GraphQLError } from "graphql";
 import { Todo } from "./models/Todo.js";
+import { Task } from "./models/Task.js";
+import { User } from "./models/User.js";
 dotenv.config();
 // DB config
 const uri = process.env.MONGO_URL;
@@ -23,7 +25,7 @@ const productsCollection = dataBase.collection("products");
 
 mongoose
   .connect(
-    `mongodb+srv://saijami:EcUpT3Et6dpojJz3@atlascluster.iotmmxp.mongodb.net/todo-app-1`
+    `mongodb+srv://saijami:EcUpT3Et6dpojJz3@atlascluster.iotmmxp.mongodb.net/royal`
   )
   .then(() => console.log("Connected!"))
   .catch((err) => {
@@ -74,6 +76,7 @@ export const resolvers = {
         const result = await usersCollection.find().toArray();
         return result;
       } catch (error) {
+        console.log(`ERROR : ${error}`);
         throw new Error("Failed to fetch db users");
       }
     },
@@ -142,9 +145,12 @@ export const resolvers = {
         };
       }
     },
-    signUp: async (parent, { userId, password, firstName, lastName }) => {
+    signUp: async (
+      parent,
+      { userId, password, firstName, lastName, email }
+    ) => {
       try {
-        if (!userId || !password || !firstName || !lastName) {
+        if (!userId || !password || !firstName || !lastName || !email) {
           throw new GraphQLError("Invalid data. Please provide valid data.", {
             extensions: {
               code: "BAD_USER_INPUT",
@@ -171,6 +177,10 @@ export const resolvers = {
           userId,
           firstName,
           lastName,
+          email,
+          tasks: [],
+          notifications: [],
+          createdAt: Date.now(),
           password: hashedPassword,
         });
 
@@ -192,8 +202,28 @@ export const resolvers = {
         });
       }
     },
-    createTask: async (parent, { title, description }) => {
+    createTask: async (parent, { title, description, createdAt }) => {
+      const task = new Task({
+        title,
+        description,
+        createdAt,
+      });
+      return await task.save();
       console.log({ title, description });
+    },
+    assignTaskToUser: async (parent, { userId, taskId }) => {
+      const todo = await Task.findById(taskId);
+
+      console.log(await User.find(), 'All users in DB');
+      console.log(todo, "todo");
+      console.log(userId, "userId");
+      console.log(await User.find(), "userss");
+      console.log(user, "user");
+      return;
+      if (todo) {
+        todo.users.save();
+      }
+      console.log(todo, "todo");
     },
     createTodo: async (parent, { input }) => {
       const todo = new Todo(input);
